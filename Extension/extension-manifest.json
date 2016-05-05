@@ -5,6 +5,7 @@
     "version": "0.1.0",
     "publisher": "ms-vsts",
     "description": "Cloud Foundry build extension to push applications to your Cloud Foundry instance.",
+    "public": true,
     "categories": [
         "Build and release"
     ],
