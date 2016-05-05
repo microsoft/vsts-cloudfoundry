@@ -13,7 +13,7 @@ Enter the endpoint details.
 ![Generic Endpoint Details](images/cfGenericEndpoint.png)
 
 ## Define your build process
-Create a build definition to automate your build process. For detailed instructions on setting up a build definition, check [this](https://msdn.microsoft.com/Library/vs/alm/Build/vs/define-build)
+Create a build definition to automate your build process. For detailed instructions on setting up a build definition, check [this](https://msdn.microsoft.com/library/vs/alm/build/define/create)
 
 Add the Cloud Foundry Build tasks to your build steps and setup the arguments. The `Cloud Foundry` build task to push applications to Cloud Foundry can be found under `Deploy` category. The `Cloud Foundry CLI` task to run any Cloud Foundry CLI command can be found under the `Utility` category.
 

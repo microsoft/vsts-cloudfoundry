@@ -7,7 +7,7 @@ Create a Generic Service Endpoint and specify your Cloud Foundry API endpoint UR
 ![Cloud Foundry Endpoint](images/cfEndpoint.png)
 
 ## Define your build process
-Create a build definition to automate your build process. For detailed instructions on setting up a build definition, check out [this](https://msdn.microsoft.com/Library/vs/alm/Build/vs/define-build).
+Create a build definition to automate your build process. For detailed instructions on setting up a build definition, check out [this](https://msdn.microsoft.com/library/vs/alm/build/define/create).
 
 Add the Cloud Foundry Build tasks to your build steps and specify the input arguments.
 
