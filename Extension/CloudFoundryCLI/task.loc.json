@@ -1,0 +1,118 @@
+{
+  "id": "1b1e3b29-38c5-4ee5-8ddf-da4cba27964b",
+  "name": "CloudFoundryCLI",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft",
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "groups": [
+    {
+      "name": "connection",
+      "displayName": "ms-resource:loc.group.displayName.connection",
+      "isExpanded": false
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "cfEndpoint",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.cfEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.cfEndpoint"
+    },
+    {
+      "name": "skipSSLValidation",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipSSLValidation",
+      "defaultValue": "false",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.skipSSLValidation",
+      "groupName": "connection"
+    },
+    {
+      "name": "oneTimePassword",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.oneTimePassword",
+      "defaultValue": "false",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.oneTimePassword",
+      "groupName": "connection"
+    },
+    {
+      "name": "org",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.org",
+      "defaultValue": "",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.org",
+      "groupName": "connection"
+    },
+    {
+      "name": "space",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.space",
+      "defaultValue": "",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.space",
+      "groupName": "connection"
+    },
+    {
+      "name": "cfCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.cfCommand",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.cfCommand"
+    },
+    {
+      "name": "cfArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.cfArguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cfArguments"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cfToolLocation",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cfToolLocation",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cfToolLocation",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "cloudfoundrycli.js",
+      "argumentFormat": ""
+    }
+  }
+}

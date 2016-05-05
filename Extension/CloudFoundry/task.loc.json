@@ -1,0 +1,251 @@
+{
+  "id": "a0fdb0cf-30d7-4ab8-8869-fa3d0ff0a6d7",
+  "name": "CloudFoundry",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft",
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "groups": [
+    {
+      "name": "connection",
+      "displayName": "ms-resource:loc.group.displayName.connection",
+      "isExpanded": false
+    },
+    {
+      "name": "deployment",
+      "displayName": "ms-resource:loc.group.displayName.deployment",
+      "isExpanded": true
+    },
+    {
+      "name": "services",
+      "displayName": "ms-resource:loc.group.displayName.services",
+      "isExpanded": false
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "cfEndpoint",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.cfEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.cfEndpoint"
+    },
+    {
+      "name": "skipSSLValidation",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipSSLValidation",
+      "defaultValue": "false",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.skipSSLValidation",
+      "groupName": "connection"
+    },
+    {
+      "name": "oneTimePassword",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.oneTimePassword",
+      "defaultValue": "false",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.oneTimePassword",
+      "groupName": "connection"
+    },
+    {
+      "name": "org",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.org",
+      "defaultValue": "",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.org",
+      "groupName": "connection"
+    },
+    {
+      "name": "space",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.space",
+      "defaultValue": "",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.space",
+      "groupName": "connection"
+    },
+    {
+      "name": "deploymentOptions",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.deploymentOptions",
+      "defaultValue": "manifest",
+      "required": "true",
+      "groupName": "deployment",
+      "options": {
+        "manifest": "With a manifest file",
+        "manual": "Manually"
+      }
+    },
+    {
+      "name": "cfManifest",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cfManifest",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.cfManifest",
+      "groupName": "deployment",
+      "visibleRule": "deploymentOptions = manifest"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.name",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.name",
+      "groupName": "deployment",
+      "visibleRule": "deploymentOptions = manual"
+    },
+    {
+      "name": "instances",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.instances",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.instances",
+      "groupName": "deployment",
+      "visibleRule": "deploymentOptions = manual"
+    },
+    {
+      "name": "memoryLimit",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.memoryLimit",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.memoryLimit",
+      "groupName": "deployment",
+      "visibleRule": "deploymentOptions = manual"
+    },
+    {
+      "name": "startCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.startCommand",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.startCommand",
+      "groupName": "deployment",
+      "visibleRule": "deploymentOptions = manual"
+    },
+    {
+      "name": "domain",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.domain",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.domain",
+      "groupName": "deployment",
+      "visibleRule": "deploymentOptions = manual"
+    },
+    {
+      "name": "host",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.host",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.host",
+      "groupName": "deployment",
+      "visibleRule": "deploymentOptions = manual"
+    },
+    {
+      "name": "additionalDeployArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.additionalDeployArgs",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.additionalDeployArgs",
+      "groupName": "deployment"
+    },
+    {
+      "name": "createServices",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.createServices",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.createServices",
+      "groupName": "services"
+    },
+    {
+      "name": "createServiceArgs",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.createServiceArgs",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.createServiceArgs",
+      "groupName": "services",
+      "visibleRule": "createServices = true"
+    },
+    {
+      "name": "bindServices",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.bindServices",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.bindServices",
+      "groupName": "services"
+    },
+    {
+      "name": "appName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.appName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.appName",
+      "groupName": "services",
+      "visibleRule": "bindServices = true"
+    },
+    {
+      "name": "bindServiceArgs",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.bindServiceArgs",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.bindServiceArgs",
+      "groupName": "services",
+      "visibleRule": "bindServices = true"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cfToolLocation",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cfToolLocation",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cfToolLocation",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "cloudfoundry.js",
+      "argumentFormat": ""
+    }
+  }
+}

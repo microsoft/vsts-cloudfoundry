@@ -1,0 +1,118 @@
+{
+    "id": "1b1e3b29-38c5-4ee5-8ddf-da4cba27964b",
+    "name": "CloudFoundryCLI",
+    "friendlyName": "Cloud Foundry CLI",
+    "description": "Run a command using the Cloud Foundry command line interface.",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft",
+    "demands": [],
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "groups": [
+        {
+            "name": "connection",
+            "displayName": "Connection Settings",
+            "isExpanded": false
+        },
+        {
+          "name": "advanced",
+          "displayName": "Advanced",
+          "isExpanded": false
+        }
+    ],
+    "instanceNameFormat": "cf $(cfCommand)",
+    "inputs": [
+      {
+        "name": "cfEndpoint",
+        "type": "connectedService:Generic",
+        "label": "Cloud Foundry Endpoint",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Service endpoint for your Cloud Foundry instance."
+      },     
+      {
+        "name": "skipSSLValidation",
+        "type": "boolean",
+        "label": "Skip SSL Validation",
+        "defaultValue": "false",
+        "required": "false",
+        "helpMarkDown": "Skip SSL validation when connecting to the Cloud Foundry endpoint.",
+        "groupName": "connection"
+      },
+      {
+        "name": "oneTimePassword",
+        "type": "boolean",
+        "label": "Use One-time Password",
+        "defaultValue": "false",
+        "required": "false",
+        "helpMarkDown": "Use a one-time password to login to the Cloud Foundry instance.",
+        "groupName": "connection"
+      },
+      {
+        "name": "org",
+        "type": "string",
+        "label": "Org",
+        "defaultValue": "",
+        "required": "false",
+        "helpMarkDown": "Optionally specify the org to login to on the Cloud Foundry instance. The default org will be used if nothing is specified.",
+        "groupName": "connection"
+      },
+      {
+        "name": "space",
+        "type": "string",
+        "label": "Space",
+        "defaultValue": "",
+        "required": "false",
+        "helpMarkDown": "Optionally specify the space to login to on the Cloud Foundry instance. The default space will be used if nothing is specified.",
+        "groupName": "connection"
+      },
+      {
+        "name": "cfCommand",
+        "type": "string",
+        "label": "Command",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "The Cloud Foundry CLI command to run. Run `cf help` to get complete list of commands or refer to: http://docs.cloudfoundry.org/cf-cli/getting-started.html"        
+      },
+      {
+        "name": "cfArguments",
+        "type": "string",
+        "label": "Arguments",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "The arguments to pass to the Cloud Foundry CLI command. Run `cf <command> --help` to get complete list of arguments supported by the command."        
+      },
+      {
+        "name": "workingDirectory",
+        "type": "filePath",
+        "label": "Working Directory",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "The working directory to run the Cloud Foundry CLI commands.",
+        "groupName": "advanced"
+      },
+      {
+        "name": "cfToolLocation",
+        "type": "filePath",
+        "label": "Cloud Foundry CLI Location",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "Optionally specify the location to the cf CLI. If location is not specified, cf CLI needs to be in the PATH.",
+        "groupName": "advanced"
+      }
+    ],
+    "execution": {
+        "Node": {
+            "target": "cloudfoundrycli.js",
+            "argumentFormat": ""
+        }
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "manifestVersion": 1,
+    "id": "cloud-foundry-build-extension",
+    "name": "Cloud Foundry",
+    "version": "0.1.0",
+    "publisher": "ms-vsts",
+    "description": "Cloud Foundry build extension to push applications to your Cloud Foundry instance.",
+    "categories": [
+        "Build and release"
+    ],
+    "tags": [
+        "deploy",
+        "cloud foundry"
+    ],
+    "content": {
+        "details": {
+            "path": "overview.md"
+        }
+    },
+    "links": {
+        "getstarted": {
+            "uri": "https://github.com/Microsoft/vsts-cloudfoundry"
+        },
+        "support": {
+            "uri": "https://github.com/Microsoft/vsts-cloudfoundry/issues"
+        }
+    },
+    "targets":[
+        { "id":"Microsoft.VisualStudio.Services" }
+    ],
+    "icons": {
+        "default": "extension-icon.png"
+    },
+    "files": [
+        {
+            "path": "CloudFoundry"
+        },
+        {
+            "path": "CloudFoundryCLI"
+        },
+        {
+            "path": "images",
+            "addressable": true
+        }
+    ],
+    "contributions": [
+        {
+            "id": "cloud-foundry-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "CloudFoundry"
+            }
+        },
+        {
+            "id": "cloud-foundry-cli-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "CloudFoundryCLI"
+            }
+        }
+    ]
+}

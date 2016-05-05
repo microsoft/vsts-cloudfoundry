@@ -1,0 +1,251 @@
+{
+    "id": "a0fdb0cf-30d7-4ab8-8869-fa3d0ff0a6d7",
+    "name": "CloudFoundry",
+    "friendlyName": "Cloud Foundry",
+    "description": "Push your applications to Cloud Foundry",
+    "helpMarkDown": "",
+    "category": "Deploy",
+    "visibility": [
+                "Build",    
+                "Release"
+                  ],
+    "author": "Microsoft",
+    "demands": [],
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "groups": [
+        {
+            "name": "connection",
+            "displayName": "Connection Settings",
+            "isExpanded": false
+        },
+        {
+            "name": "deployment",
+            "displayName": "Deployment Options",
+            "isExpanded": true
+        },
+        {
+          "name": "services",
+          "displayName": "Services",
+          "isExpanded": false
+        },
+        {
+          "name": "advanced",
+          "displayName": "Advanced",
+          "isExpanded": false
+        }
+    ],
+    "instanceNameFormat": "Push to Cloud Foundry",
+    "inputs": [
+      {
+        "name": "cfEndpoint",
+        "type": "connectedService:Generic",
+        "label": "Cloud Foundry Endpoint",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Service endpoint for your Cloud Foundry instance."
+      },     
+      {
+        "name": "skipSSLValidation",
+        "type": "boolean",
+        "label": "Skip SSL Validation",
+        "defaultValue": "false",
+        "required": "false",
+        "helpMarkDown": "Skip SSL validation when connecting to the Cloud Foundry endpoint.",
+        "groupName": "connection"
+      },
+      {
+        "name": "oneTimePassword",
+        "type": "boolean",
+        "label": "Use One-time Password",
+        "defaultValue": "false",
+        "required": "false",
+        "helpMarkDown": "Use a one-time password to login to the Cloud Foundry instance.",
+        "groupName": "connection"
+      },
+      {
+        "name": "org",
+        "type": "string",
+        "label": "Org",
+        "defaultValue": "",
+        "required": "false",
+        "helpMarkDown": "Optionally specify the org to login to on the Cloud Foundry instance. The default org will be used if nothing is specified.",
+        "groupName": "connection"
+      },
+      {
+        "name": "space",
+        "type": "string",
+        "label": "Space",
+        "defaultValue": "",
+        "required": "false",
+        "helpMarkDown": "Optionally specify the space to login to on the Cloud Foundry instance. The default space will be used if nothing is specified.",
+        "groupName": "connection"
+      },
+      {
+        "name": "deploymentOptions",
+        "type": "radio",
+        "label": "Specify Options",
+        "defaultValue": "manifest",
+        "required": "true",
+        "groupName": "deployment",
+        "options": {
+          "manifest": "With a manifest file",
+          "manual": "Manually"
+        }
+      },
+      {
+        "name": "cfManifest",
+        "type": "filePath",
+        "label": "Manifest File",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown":  "The path to the manifest file containing Cloud Foundry deployment options.",
+        "groupName": "deployment",
+        "visibleRule": "deploymentOptions = manifest"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "label": "Name",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "Name of the application to push to Cloud Foundry.",
+        "groupName": "deployment",
+        "visibleRule": "deploymentOptions = manual"
+      },
+      {
+        "name": "instances",
+        "type": "string",
+        "label": "Instances",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "Number of instances of the application to deploy.",
+        "groupName": "deployment",
+        "visibleRule": "deploymentOptions = manual"
+      },
+      {
+        "name": "memoryLimit",
+        "type": "string",
+        "label": "Memory Limit",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "The maximum amount of memory each instance of the pushed application can consume.",
+        "groupName": "deployment",
+        "visibleRule": "deploymentOptions = manual"
+      },
+      {
+        "name": "startCommand",
+        "type": "string",
+        "label": "Start Command",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "The command that Cloud Foundry uses to start each instance of your application.",
+        "groupName": "deployment",
+        "visibleRule": "deploymentOptions = manual"
+      },
+      {
+        "name": "domain",
+        "type": "string",
+        "label": "Domain",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "Domain where the application is pushed.",
+        "groupName": "deployment",
+        "visibleRule": "deploymentOptions = manual"
+      },
+      {
+        "name": "host",
+        "type": "string",
+        "label": "Host",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "Subdomain where the application is pushed.",
+        "groupName": "deployment",
+        "visibleRule": "deploymentOptions = manual"
+      },
+      {
+        "name": "additionalDeployArgs",
+        "type": "string",
+        "label": "Additional Arguments",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "Additional arguments to pass to `cf push`. Reference: http://docs.cloudfoundry.org/cf-cli/getting-started.html#push",
+        "groupName": "deployment"
+      },
+      {
+        "name": "createServices",
+        "type": "boolean",
+        "label": "Create Services",
+        "defaultValue": "false",
+        "required": true,
+        "helpMarkDown": "Choose to create new services before pushing your application.",
+        "groupName": "services"
+      },
+      {
+        "name": "createServiceArgs",
+        "type": "multiLine",
+        "label": "Create Service Arguments",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Specify name of user provided service to create with optional properties. Specify each service on a new line e.g. \n\n `my-db-service1` \n\n `my-route-service -r https://example.com`",
+        "groupName": "services",
+        "visibleRule": "createServices = true"
+      },
+      {
+        "name": "bindServices",
+        "type": "boolean",
+        "label": "Bind Services",
+        "defaultValue": "false",
+        "required": true,
+        "helpMarkDown": "Choose to bind existing services to your application.",
+        "groupName": "services"
+      },
+      {
+        "name": "appName",
+        "type": "string",
+        "label": "Application Name",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Specify the name of the application to which to bind services.",
+        "groupName": "services",
+        "visibleRule": "bindServices = true"    
+      },
+      {
+        "name": "bindServiceArgs",
+        "type": "multiLine",
+        "label": "Bind Service Arguments",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Specify service names with optional service-specific configuration parameters to bind to the application. Specify each service on a new line e.g. \n\n`my-db-service1` \n\n `my-db-service2 -c ~/workspace/tmp/instance_config.json`",
+        "groupName": "services",
+        "visibleRule": "bindServices = true"  
+      },
+      {
+        "name": "workingDirectory",
+        "type": "filePath",
+        "label": "Working Directory",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "The working directory of the application that should be pushed to Cloud Foundry.",
+        "groupName": "advanced"
+      },
+      {
+        "name": "cfToolLocation",
+        "type": "filePath",
+        "label": "Cloud Foundry CLI Location",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "Optionally specify the location to the cf CLI. If location is not specified, cf CLI needs to be in the PATH.",
+        "groupName": "advanced"
+      }
+    ],
+    "execution": {
+        "Node": {
+            "target": "cloudfoundry.js",
+            "argumentFormat": ""
+        }
+    }
+}
