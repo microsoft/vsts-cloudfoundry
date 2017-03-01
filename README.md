@@ -33,8 +33,8 @@ We love and encourage community contributions. To contribute:
 ## Build pre-requisites
 1. This package requires `node` and `npm`
 
-## To compile, please run:
-1. npm update
+## To compile, run:
+1. npm install
 1. gulp
 
 The vsix package will be produced in `_package`, and it can be uploaded to Visual Studio Team Services Marketplace for sharing. 

@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "cloud-foundry-build-extension",
     "name": "Cloud Foundry",
-    "version": "0.1.0",
+    "version": "0.114.0",
     "publisher": "ms-vsts",
     "description": "Cloud Foundry build extension to push applications to your Cloud Foundry instance.",
     "public": true,

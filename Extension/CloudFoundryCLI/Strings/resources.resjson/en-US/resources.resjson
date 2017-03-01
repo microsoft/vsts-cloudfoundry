@@ -11,6 +11,8 @@
   "loc.input.help.skipSSLValidation": "Skip SSL validation when connecting to the Cloud Foundry endpoint.",
   "loc.input.label.oneTimePassword": "Use One-time Password",
   "loc.input.help.oneTimePassword": "Use a one-time password to login to the Cloud Foundry instance.",
+  "loc.input.label.ssoPasscode": "One-time Passcode",
+  "loc.input.help.ssoPasscode": "Specify the one-time passcode to login to the Cloud Foundry instance. To acquire the one-time passcode, run cf CLI login command with --sso option.",
   "loc.input.label.org": "Org",
   "loc.input.help.org": "Optionally specify the org to login to on the Cloud Foundry instance. The default org will be used if nothing is specified.",
   "loc.input.label.space": "Space",

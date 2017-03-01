@@ -5,6 +5,7 @@
 /// <reference path="../../definitions/Q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 var tl = require('vsts-task-lib/task');
+var fs = require('fs');
 var Q = require('q');
 var onError = function (errMsg) {
     tl.error(errMsg);
@@ -22,7 +23,7 @@ var cfEndpointAuth = tl.getEndpointAuthorization(cfEndpoint, false);
 var workingDir = tl.getInput('workingDirectory', true);
 var cfPath = tl.which('cf');
 var cfToolLocation = tl.getInput('cfToolLocation');
-if (cfToolLocation != tl.getVariable('build.sourcesDirectory')) {
+if (cfToolLocation != tl.getVariable('System.DefaultWorkingDirectory')) {
     //custom tool location for cf CLI was specified
     cfPath = cfToolLocation;
 }
@@ -31,6 +32,9 @@ else {
     if (!cfPath) {
         onError('cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.');
     }
+}
+if (!fs.existsSync(cfPath)) {
+    onError('cf CLI not found at: ' + cfPath);
 }
 //login using cf CLI login
 function loginToCF() {
@@ -44,7 +48,8 @@ function loginToCF() {
         cfLogin.arg('-p');
         cfLogin.arg(cfEndpointAuth['parameters']['password']);
         if (tl.getBoolInput('oneTimePassword')) {
-            cfLogin.arg('--sso');
+            cfLogin.arg('--sso-passcode');
+            cfLogin.arg(tl.getInput('ssoPasscode'));
         }
         if (tl.getBoolInput('skipSSLValidation')) {
             cfLogin.arg('--skip-ssl-validation');
