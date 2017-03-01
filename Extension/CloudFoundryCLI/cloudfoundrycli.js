@@ -5,6 +5,7 @@
 /// <reference path="../../definitions/Q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 var tl = require('vsts-task-lib/task');
+var fs = require('fs');
 var Q = require('q');
 var onError = function (errMsg) {
     tl.error(errMsg);
@@ -31,6 +32,9 @@ else {
     if (!cfPath) {
         onError('cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.');
     }
+}
+if (!fs.existsSync(cfPath)) {
+    onError('cf CLI not found at: ' + cfPath);
 }
 //login using cf CLI login
 function loginToCF() {
