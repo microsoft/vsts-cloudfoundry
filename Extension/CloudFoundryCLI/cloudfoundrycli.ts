@@ -29,7 +29,7 @@ var workingDir = tl.getInput('workingDirectory', true);
 
 var cfPath = tl.which('cf');
 var cfToolLocation = tl.getInput('cfToolLocation');
-if(cfToolLocation != tl.getVariable('build.sourcesDirectory')) {
+if(cfToolLocation != tl.getVariable('System.DefaultWorkingDirectory')) {
     //custom tool location for cf CLI was specified
     cfPath = cfToolLocation;
 } else {
@@ -50,8 +50,9 @@ function loginToCF() {
         cfLogin.arg(cfEndpointAuth['parameters']['username']);
         cfLogin.arg('-p');
         cfLogin.arg(cfEndpointAuth['parameters']['password']);
-        if (tl.getBoolInput('oneTimePassword')) {
-            cfLogin.arg('--sso');
+       if (tl.getBoolInput('oneTimePassword')) {
+            cfLogin.arg('--sso-passcode');
+            cfLogin.arg(tl.getInput('ssoPasscode'));
         }
         if(tl.getBoolInput('skipSSLValidation')) {
             cfLogin.arg('--skip-ssl-validation');

@@ -208,7 +208,7 @@ function packageVsix(vsixPath, manifestDir) {
     shell.pushd(manifestDir);
 
     var manifest = "extension-manifest.json";
-    var tfx = path.join(__dirname, 'node_modules', 'tfx-cli', '_build', 'app', 'app.js');
+    var tfx = path.join(__dirname, 'node_modules', 'tfx-cli', '_build', 'app.js');
     var commandLine = "node " + tfx + " extension create --manifest-globs " + manifest;
     console.log("Running: " + commandLine);
     exec(commandLine, function(err, stdout, stderr) {
