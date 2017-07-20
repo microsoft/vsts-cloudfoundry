@@ -39,7 +39,7 @@
     "through2": "^0.6.3",
     "typescript": "^1.1.0",
     "validator": "^3.33.0",
-    "vsts-task-lib": "^0.7.0"
+    "vsts-task-lib": "^2.0.5"
   },
   "dependencies": {
     "process": "^0.10.1",

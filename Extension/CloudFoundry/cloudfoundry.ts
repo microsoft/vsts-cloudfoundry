@@ -1,18 +1,15 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
+import process = require('process');
 import Q = require('q');
 
 var onError = function(errMsg) {
     tl.error(errMsg);
-    tl.exit(1);
+    process.exit(1);
 }
 
 var cfEndpoint = tl.getInput('cfEndpoint', true);
@@ -46,7 +43,7 @@ if(!fs.existsSync(cfPath)) {
 //login using cf CLI login
 function loginToCF() {
      return Q.fcall(() => {
-        var cfLogin = tl.createToolRunner(cfPath);
+        var cfLogin = tl.tool(cfPath);
         cfLogin.arg('login');
         cfLogin.arg('-a');
         cfLogin.arg(cfEndpointUrl);
@@ -80,9 +77,9 @@ function createService(createServiceArgs:string) {
     return Q.fcall(() => {
         if(createServiceArgs && createServiceArgs.trim() != '') {
             //cf cups = create-user-provided-service
-            var cfCups = tl.createToolRunner(cfPath);
+            var cfCups = tl.tool(cfPath);
             cfCups.arg('create-user-provided-service');
-            cfCups.argString(createServiceArgs);
+            cfCups.line(createServiceArgs);
             return cfCups.exec();     
         } else {
             return Q(0);
@@ -113,7 +110,7 @@ function createServices() {
 function pushAppToCF() {
     return Q.fcall(() => {
     tl.cd(workingDir);
-    var cfPush = tl.createToolRunner(cfPath);
+    var cfPush = tl.tool(cfPath);
     cfPush.arg('push');
     
     if(tl.getInput('deploymentOptions') == 'manifest') {     
@@ -155,7 +152,7 @@ function pushAppToCF() {
     
     //any additional arguments to pass to cf push
     if(tl.getInput('additionalDeployArgs')) {
-        cfPush.argString(tl.getInput('additionalDeployArgs'));
+        cfPush.line(tl.getInput('additionalDeployArgs'));
     }
     
     return cfPush.exec();
@@ -165,7 +162,7 @@ function pushAppToCF() {
 //restage an app after binding services using cf CLI
 function restageApp(appName:string) {
     return Q.fcall(() => {
-        var cfRestage = tl.createToolRunner(cfPath);
+        var cfRestage = tl.tool(cfPath);
         cfRestage.arg('restage');
         cfRestage.arg(appName);
         return cfRestage.exec();
@@ -176,10 +173,10 @@ function restageApp(appName:string) {
 function bindServiceToApp(appName:string, service:string) {
     return Q.fcall(() => {
         if(appName && service && service.trim() != '') {
-            var cfBindService = tl.createToolRunner(cfPath);
+            var cfBindService = tl.tool(cfPath);
             cfBindService.arg('bind-service');
             cfBindService.arg(appName);
-            cfBindService.argString(service);
+            cfBindService.line(service);
             return cfBindService.exec();
         } else {
             return Q(0);
