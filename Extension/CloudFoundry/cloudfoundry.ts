@@ -4,24 +4,10 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
-import process = require('process');
 import Q = require('q');
 
-var onError = function(errMsg) {
-    tl.error(errMsg);
-    process.exit(1);
-}
-
 var cfEndpoint = tl.getInput('cfEndpoint', true);
-if (!cfEndpoint) {
-    onError('The Cloud Foundry Endpoint could not be found');
-}
-
 var cfEndpointUrl = tl.getEndpointUrl(cfEndpoint, false);
-if (!cfEndpointUrl) {
-    onError('The Cloud Foundry Endpoint URL could not be found');
-}
-
 var cfEndpointAuth = tl.getEndpointAuthorization(cfEndpoint, false);
 var workingDir = tl.getInput('workingDirectory', true);
 
@@ -30,14 +16,6 @@ var cfToolLocation = tl.getInput('cfToolLocation');
 if(cfToolLocation != tl.getVariable('System.DefaultWorkingDirectory')) {
     //custom tool location for cf CLI was specified
     cfPath = cfToolLocation;
-} else {
-    //tool location for cf CLI was not specified, show error if cf CLI is not in the PATH
-    if (!cfPath) {
-        onError('cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.') 
-    }
-}
-if(!fs.existsSync(cfPath)) {
-    onError('cf CLI not found at: ' + cfPath);
 }
 
 //login using cf CLI login
@@ -210,13 +188,7 @@ function bindServicesToApp() {
         var services: string[] = tl.getDelimitedInput('bindServiceArgs', '\n', false);
         if(tl.getBoolInput('bindServices') && services && services.length > 0) {
             //get the application name from services group or deployment options group
-            var appName = tl.getInput('appName');
-            if(!appName) {
-                appName = tl.getInput('name');
-            }
-            if(!appName) {
-                onError('Application name to bind services is not specified.')
-            }
+            var appName = tl.getInput('appName', true);
             var result = Q({});
             services.forEach((fn)=> {
                 result = result.then(() => {
@@ -227,7 +199,8 @@ function bindServicesToApp() {
                 tl.debug('Successfully bound all services to the application. Restaging the application for changes to take effect.')
                 return restageApp(appName);
             }).fail(function (err) {
-                onError("Failed to bind services to app. "  + err);  
+                tl.setResult(tl.TaskResult.Failed, "Failed to bind services to app. "  + err);
+                return Q.reject(err);
             })
         } else {
             tl.debug('User did not choose to bind services or specify any services to bind to the application.');
@@ -236,30 +209,36 @@ function bindServicesToApp() {
     });
 }
 
-//The main task logic to push an app to Cloud Foundry
-loginToCF()
-.then(function (code) {
-    tl.debug('cf login succeeded, create services if applicable.');
-    createServices()
+if (!cfPath) {
+    //tool location for cf CLI was not specified, show error if cf CLI is not in the PATH
+    tl.setResult(tl.TaskResult.Failed, 'cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.');
+} else if(!fs.existsSync(cfPath)) {
+    tl.setResult(tl.TaskResult.Failed, 'cf CLI not found at: ' + cfPath);
+} else {
+    //The main task logic to push an app to Cloud Foundry
+    loginToCF()
     .then(function (code) {
-        tl.debug('Finished creating services if applicable, push app using cf CLI.');
-        pushAppToCF()
+        tl.debug('cf login succeeded, create services if applicable.');
+        createServices()
         .then(function (code) {
-            tl.debug('Successfully pushed app, now bind to existing services if applicable.');
-            bindServicesToApp()
-            .fail(function (err) {
-                onError('Failed to bind services to the application. ' + err);
+            tl.debug('Finished creating services if applicable, push app using cf CLI.');
+            pushAppToCF()
+            .then(function (code) {
+                tl.debug('Successfully pushed app, now bind to existing services if applicable.');
+                bindServicesToApp()
+                .fail(function (err) {
+                    tl.setResult(tl.TaskResult.Failed, 'Failed to bind services to the application. ' + err);
+                })
             })
+            .fail(function (err) {
+                tl.setResult(tl.TaskResult.Failed, 'Failed to push app to Cloud Foundry. ' + err);
+            })        
         })
         .fail(function (err) {
-            onError('Failed to push app to Cloud Foundry. ' + err);
-        })        
+            tl.setResult(tl.TaskResult.Failed, 'Failed to create services in Cloud Foundry. ' + err);
+        })
     })
-    .fail(function (err) {
-        onError('Failed to create services in Cloud Foundry. ' + err);
+    .fail(function(err) {
+        tl.setResult(tl.TaskResult.Failed, 'Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials. ' + err);
     })
-})
-.fail(function(err) {
-    onError('Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials. ' + err);
-})
-
+}

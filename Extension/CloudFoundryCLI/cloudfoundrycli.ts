@@ -4,41 +4,17 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
-import process = require('process');
 import Q = require('q');
 
-var onError = function(errMsg) {
-    tl.error(errMsg);
-    process.exit(1);
-}
-
 var cfEndpoint = tl.getInput('cfEndpoint', true);
-if (!cfEndpoint) {
-    onError('The Cloud Foundry Endpoint could not be found');
-}
-
 var cfEndpointUrl = tl.getEndpointUrl(cfEndpoint, false);
-if (!cfEndpointUrl) {
-    onError('The Cloud Foundry Endpoint URL could not be found');
-}
-
 var cfEndpointAuth = tl.getEndpointAuthorization(cfEndpoint, false);
 var workingDir = tl.getInput('workingDirectory', true);
-
 var cfPath = tl.which('cf');
 var cfToolLocation = tl.getInput('cfToolLocation');
 if(cfToolLocation != tl.getVariable('System.DefaultWorkingDirectory')) {
     //custom tool location for cf CLI was specified
     cfPath = cfToolLocation;
-} else {
-    //tool location for cf CLI was not specified, show error if cf CLI is not in the PATH
-    if (!cfPath) {
-        onError('cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.') 
-    }
-}
-
-if(!fs.existsSync(cfPath)) {
-    onError('cf CLI not found at: ' + cfPath);
 }
 
 //login using cf CLI login
@@ -73,19 +49,27 @@ function loginToCF() {
      });
 }
 
-//The main task login to run cf CLI commands
-loginToCF()
-.then(function (code) {
-   var cfCmd = tl.tool(cfPath);
-   cfCmd.arg(tl.getInput('cfCommand', true));
-   var args = tl.getInput('cfArguments');
-   if(args) {
-       cfCmd.line(args);
-   }
-   cfCmd.exec()
-   .fail(onError);
-})
-.fail(function(err) {
-    onError('Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials. ' + err);
-})
 
+if(!cfPath) {
+    tl.setResult(tl.TaskResult.Failed, 'cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.');
+} else if(!fs.existsSync(cfPath)) {
+    tl.setResult(tl.TaskResult.Failed, 'cf CLI not found at: ' + cfPath);
+} else {
+    //The main task login to run cf CLI commands
+    loginToCF()
+    .then(function (code) {
+        var cfCmd = tl.tool(cfPath);
+        cfCmd.arg(tl.getInput('cfCommand', true));
+        var args = tl.getInput('cfArguments');
+        if(args) {
+            cfCmd.line(args);
+        }
+        cfCmd.exec()
+        .fail(function(err) {
+            tl.setResult(tl.TaskResult.Failed, '' + err);
+        });
+    })
+    .fail(function(err) {
+        tl.setResult(tl.TaskResult.Failed, 'Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials. ' + err);
+    })
+}
