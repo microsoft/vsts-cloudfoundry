@@ -12,8 +12,8 @@
   "author": "Microsoft",
   "demands": [],
   "version": {
-    "Major": 0,
-    "Minor": 115,
+    "Major": 1,
+    "Minor": 122,
     "Patch": 0
   },
   "groups": [
@@ -157,14 +157,24 @@
       "visibleRule": "deploymentOptions = manual"
     },
     {
+      "name": "useRoute",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useRoute",
+      "defaultValue": "true",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.useRoute",
+      "groupName": "deployment",
+      "visibleRule": "deploymentOptions = manual"
+    },
+    {
       "name": "domain",
       "type": "string",
       "label": "ms-resource:loc.input.label.domain",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.domain",
       "groupName": "deployment",
-      "visibleRule": "deploymentOptions = manual"
+      "visibleRule": "deploymentOptions = manual && useRoute = true"
     },
     {
       "name": "host",
@@ -174,7 +184,32 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.host",
       "groupName": "deployment",
+      "visibleRule": "deploymentOptions = manual && useRoute = true"
+    },
+    {
+      "name": "buildPackOptions",
+      "type": "picklist",
+      "label": "ms-resource:loc.input.label.buildPackOptions",
+      "defaultValue": "none",
+      "required": "true",
+      "groupName": "deployment",
+      "helpMarkDown": "ms-resource:loc.input.help.buildPackOptions",
+      "options": {
+        "custom": "Custom",
+        "builtin": "Use built-in buildpacks only",
+        "none": "None"
+      },
       "visibleRule": "deploymentOptions = manual"
+    },
+    {
+      "name": "buildPackCustom",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildPackCustom",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.buildPackCustom",
+      "groupName": "deployment",
+      "visibleRule": "deploymentOptions = manual && buildPackOptions = custom"
     },
     {
       "name": "additionalDeployArgs",
@@ -183,6 +218,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.additionalDeployArgs",
+      "groupName": "deployment"
+    },
+    {
+      "name": "startOnDeploy",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.startOnDeploy",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.startOnDeploy",
       "groupName": "deployment"
     },
     {

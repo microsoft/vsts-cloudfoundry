@@ -1,15 +1,14 @@
+"use strict";
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
-"use strict";
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-var tl = require('vsts-task-lib/task');
-var fs = require('fs');
-var Q = require('q');
+exports.__esModule = true;
+var tl = require("vsts-task-lib/task");
+var fs = require("fs");
+var process = require("process");
+var Q = require("q");
 var onError = function (errMsg) {
     tl.error(errMsg);
-    tl.exit(1);
+    process.exit(1);
 };
 var cfEndpoint = tl.getInput('cfEndpoint', true);
 if (!cfEndpoint) {
@@ -39,7 +38,7 @@ if (!fs.existsSync(cfPath)) {
 //login using cf CLI login
 function loginToCF() {
     return Q.fcall(function () {
-        var cfLogin = tl.createToolRunner(cfPath);
+        var cfLogin = tl.tool(cfPath);
         cfLogin.arg('login');
         cfLogin.arg('-a');
         cfLogin.arg(cfEndpointUrl);
@@ -69,11 +68,11 @@ function loginToCF() {
 //The main task login to run cf CLI commands
 loginToCF()
     .then(function (code) {
-    var cfCmd = tl.createToolRunner(cfPath);
+    var cfCmd = tl.tool(cfPath);
     cfCmd.arg(tl.getInput('cfCommand', true));
     var args = tl.getInput('cfArguments');
     if (args) {
-        cfCmd.argString(args);
+        cfCmd.line(args);
     }
     cfCmd.exec()
         .fail(onError);

@@ -4,6 +4,7 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
+import process = require('process');
 import Q = require('q');
 
 var onError = function(errMsg) {

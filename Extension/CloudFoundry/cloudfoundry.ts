@@ -138,15 +138,35 @@ function pushAppToCF() {
             cfPush.arg('-c');
             cfPush.arg(tl.getInput('startCommand'));
         }
-        
-        if(tl.getInput('domain')) {
-            cfPush.arg('-d');
-            cfPush.arg(tl.getInput('domain'));
+
+        let buildPackOption:string = tl.getInput('buildPackOptions');
+        if(buildPackOption === 'custom') {
+            cfPush.arg('-b');
+            cfPush.arg(tl.getInput('buildPack', true));
+        } else if(buildPackOption === 'builtin') {
+            cfPush.arg('-b');
+            cfPush.arg(tl.getInput('default'));
         }
         
-        if(tl.getInput('host')) {
-            cfPush.arg('--hostname');
-            cfPush.arg(tl.getInput('host'));
+        if(tl.getBoolInput('useRoute')) {
+            let domainOption:string = tl.getInput('domainOptions');
+            if (domainOption === 'custom') {
+                if(tl.getInput('domain')) {
+                    cfPush.arg('-d');
+                    cfPush.arg(tl.getInput('domain'));
+                }
+            }
+            
+            if(tl.getInput('host')) {
+                cfPush.arg('--hostname');
+                cfPush.arg(tl.getInput('host'));
+            }
+        } else {
+            cfPush.arg('--no-route');
+        }
+
+        if(tl.getBoolInput('startOnDeploy', false)) {
+            cfPush.arg('--no-start');
         }
     }
     
