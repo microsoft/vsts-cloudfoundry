@@ -142,10 +142,10 @@ function pushAppToCF() {
         let buildPackOption:string = tl.getInput('buildPackOptions');
         if(buildPackOption === 'custom') {
             cfPush.arg('-b');
-            cfPush.arg(tl.getInput('buildPack', true));
+            cfPush.arg(tl.getInput('buildPackCustom', true));
         } else if(buildPackOption === 'builtin') {
             cfPush.arg('-b');
-            cfPush.arg(tl.getInput('default'));
+            cfPush.arg('default');
         }
         
         if(tl.getBoolInput('useRoute')) {
