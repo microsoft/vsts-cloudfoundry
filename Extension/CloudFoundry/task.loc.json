@@ -301,5 +301,13 @@
       "target": "cloudfoundry.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "CLINotFound": "ms-resource:loc.messages.CLINotFound",
+    "CLINotFoundInPath": "ms-resource:loc.messages.CLINotFoundInPath",
+    "EndPointCredentials": "ms-resource:loc.messages.EndPointCredentials",
+    "BindServicesFailed": "ms-resource:loc.messages.BindServicesFailed",
+    "PushFailed": "ms-resource:loc.messages.PushFailed",
+    "CreateServiceFailed": "ms-resource:loc.messages.CreateServiceFailed"
   }
 }

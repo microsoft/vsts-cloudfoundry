@@ -51,9 +51,9 @@ function loginToCF() {
 
 
 if(!cfPath) {
-    tl.setResult(tl.TaskResult.Failed, 'cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.');
+    tl.setResult(tl.TaskResult.Failed, tl.loc('CLINotFound'));
 } else if(!fs.existsSync(cfPath)) {
-    tl.setResult(tl.TaskResult.Failed, 'cf CLI not found at: ' + cfPath);
+    tl.setResult(tl.TaskResult.Failed, tl.loc('CLINotFoundInPath', cfPath));
 } else {
     //The main task login to run cf CLI commands
     loginToCF()
@@ -70,6 +70,7 @@ if(!cfPath) {
         });
     })
     .fail(function(err) {
-        tl.setResult(tl.TaskResult.Failed, 'Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials. ' + err);
+        tl.error(err);
+        tl.setResult(tl.TaskResult.Failed, tl.loc('EndPointCredentials'));
     })
 }

@@ -124,5 +124,10 @@
             "target": "cloudfoundrycli.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+      "CLINotFound": "cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.",
+      "CLINotFoundInPath": "cf CLI not found at: %s",
+      "EndPointCredentials": "Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials."
     }
 }

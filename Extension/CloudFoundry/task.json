@@ -193,7 +193,7 @@
         "defaultValue": "none",
         "required": "true",
         "groupName": "deployment",
-        "helpMarkDown": "Specify a buildpack using a service endpoind or by a custom name. Please see (http://cli.cloudfoundry.org/en-US/cf/push.html) for more informamtion regarding buildpacks.",
+        "helpMarkDown": "Specify a buildpack using a service endpoint or by a custom name. Please see (http://cli.cloudfoundry.org/en-US/cf/push.html) for more information regarding buildpacks.",
         "options": {
           "custom": "Custom",
           "builtin": "Use built-in buildpacks only",
@@ -301,5 +301,13 @@
             "target": "cloudfoundry.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+      "CLINotFound": "cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.",
+      "CLINotFoundInPath": "cf CLI not found at: %s",
+      "EndPointCredentials": "Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials.",
+      "BindServicesFailed": "Failed to bind services to app.",
+      "PushFailed": "Failed to push app to Cloud Foundry.",
+      "CreateServiceFailed": "Failed to create services in Cloud Foundry."
     }
 }

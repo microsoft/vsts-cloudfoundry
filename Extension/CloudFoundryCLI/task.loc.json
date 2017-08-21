@@ -124,5 +124,10 @@
       "target": "cloudfoundrycli.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "CLINotFound": "ms-resource:loc.messages.CLINotFound",
+    "CLINotFoundInPath": "ms-resource:loc.messages.CLINotFoundInPath",
+    "EndPointCredentials": "ms-resource:loc.messages.EndPointCredentials"
   }
 }
