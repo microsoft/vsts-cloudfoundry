@@ -1,30 +1,13 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 import Q = require('q');
 
-var onError = function(errMsg) {
-    tl.error(errMsg);
-    tl.exit(1);
-}
-
 var cfEndpoint = tl.getInput('cfEndpoint', true);
-if (!cfEndpoint) {
-    onError('The Cloud Foundry Endpoint could not be found');
-}
-
 var cfEndpointUrl = tl.getEndpointUrl(cfEndpoint, false);
-if (!cfEndpointUrl) {
-    onError('The Cloud Foundry Endpoint URL could not be found');
-}
-
 var cfEndpointAuth = tl.getEndpointAuthorization(cfEndpoint, false);
 var workingDir = tl.getInput('workingDirectory', true);
 
@@ -33,20 +16,12 @@ var cfToolLocation = tl.getInput('cfToolLocation');
 if(cfToolLocation != tl.getVariable('System.DefaultWorkingDirectory')) {
     //custom tool location for cf CLI was specified
     cfPath = cfToolLocation;
-} else {
-    //tool location for cf CLI was not specified, show error if cf CLI is not in the PATH
-    if (!cfPath) {
-        onError('cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.') 
-    }
-}
-if(!fs.existsSync(cfPath)) {
-    onError('cf CLI not found at: ' + cfPath);
 }
 
 //login using cf CLI login
 function loginToCF() {
      return Q.fcall(() => {
-        var cfLogin = tl.createToolRunner(cfPath);
+        var cfLogin = tl.tool(cfPath);
         cfLogin.arg('login');
         cfLogin.arg('-a');
         cfLogin.arg(cfEndpointUrl);
@@ -80,9 +55,9 @@ function createService(createServiceArgs:string) {
     return Q.fcall(() => {
         if(createServiceArgs && createServiceArgs.trim() != '') {
             //cf cups = create-user-provided-service
-            var cfCups = tl.createToolRunner(cfPath);
+            var cfCups = tl.tool(cfPath);
             cfCups.arg('create-user-provided-service');
-            cfCups.argString(createServiceArgs);
+            cfCups.line(createServiceArgs);
             return cfCups.exec();     
         } else {
             return Q(0);
@@ -113,7 +88,7 @@ function createServices() {
 function pushAppToCF() {
     return Q.fcall(() => {
     tl.cd(workingDir);
-    var cfPush = tl.createToolRunner(cfPath);
+    var cfPush = tl.tool(cfPath);
     cfPush.arg('push');
     
     if(tl.getInput('deploymentOptions') == 'manifest') {     
@@ -141,21 +116,41 @@ function pushAppToCF() {
             cfPush.arg('-c');
             cfPush.arg(tl.getInput('startCommand'));
         }
-        
-        if(tl.getInput('domain')) {
-            cfPush.arg('-d');
-            cfPush.arg(tl.getInput('domain'));
+
+        let buildPackOption:string = tl.getInput('buildPackOptions');
+        if(buildPackOption === 'custom') {
+            cfPush.arg('-b');
+            cfPush.arg(tl.getInput('buildPackCustom', true));
+        } else if(buildPackOption === 'builtin') {
+            cfPush.arg('-b');
+            cfPush.arg('default');
         }
         
-        if(tl.getInput('host')) {
-            cfPush.arg('--hostname');
-            cfPush.arg(tl.getInput('host'));
+        if(tl.getBoolInput('useRoute')) {
+            let domainOption:string = tl.getInput('domainOptions');
+            if (domainOption === 'custom') {
+                if(tl.getInput('domain')) {
+                    cfPush.arg('-d');
+                    cfPush.arg(tl.getInput('domain'));
+                }
+            }
+            
+            if(tl.getInput('host')) {
+                cfPush.arg('--hostname');
+                cfPush.arg(tl.getInput('host'));
+            }
+        } else {
+            cfPush.arg('--no-route');
+        }
+
+        if(tl.getBoolInput('startOnDeploy', false)) {
+            cfPush.arg('--no-start');
         }
     }
     
     //any additional arguments to pass to cf push
     if(tl.getInput('additionalDeployArgs')) {
-        cfPush.argString(tl.getInput('additionalDeployArgs'));
+        cfPush.line(tl.getInput('additionalDeployArgs'));
     }
     
     return cfPush.exec();
@@ -165,7 +160,7 @@ function pushAppToCF() {
 //restage an app after binding services using cf CLI
 function restageApp(appName:string) {
     return Q.fcall(() => {
-        var cfRestage = tl.createToolRunner(cfPath);
+        var cfRestage = tl.tool(cfPath);
         cfRestage.arg('restage');
         cfRestage.arg(appName);
         return cfRestage.exec();
@@ -176,10 +171,10 @@ function restageApp(appName:string) {
 function bindServiceToApp(appName:string, service:string) {
     return Q.fcall(() => {
         if(appName && service && service.trim() != '') {
-            var cfBindService = tl.createToolRunner(cfPath);
+            var cfBindService = tl.tool(cfPath);
             cfBindService.arg('bind-service');
             cfBindService.arg(appName);
-            cfBindService.argString(service);
+            cfBindService.line(service);
             return cfBindService.exec();
         } else {
             return Q(0);
@@ -193,13 +188,7 @@ function bindServicesToApp() {
         var services: string[] = tl.getDelimitedInput('bindServiceArgs', '\n', false);
         if(tl.getBoolInput('bindServices') && services && services.length > 0) {
             //get the application name from services group or deployment options group
-            var appName = tl.getInput('appName');
-            if(!appName) {
-                appName = tl.getInput('name');
-            }
-            if(!appName) {
-                onError('Application name to bind services is not specified.')
-            }
+            var appName = tl.getInput('appName', true);
             var result = Q({});
             services.forEach((fn)=> {
                 result = result.then(() => {
@@ -210,7 +199,9 @@ function bindServicesToApp() {
                 tl.debug('Successfully bound all services to the application. Restaging the application for changes to take effect.')
                 return restageApp(appName);
             }).fail(function (err) {
-                onError("Failed to bind services to app. "  + err);  
+                tl.error(err);
+                tl.setResult(tl.TaskResult.Failed, tl.loc('BindServicesFailed'));
+                return Q.reject(err);
             })
         } else {
             tl.debug('User did not choose to bind services or specify any services to bind to the application.');
@@ -219,30 +210,40 @@ function bindServicesToApp() {
     });
 }
 
-//The main task logic to push an app to Cloud Foundry
-loginToCF()
-.then(function (code) {
-    tl.debug('cf login succeeded, create services if applicable.');
-    createServices()
+if (!cfPath) {
+    //tool location for cf CLI was not specified, show error if cf CLI is not in the PATH
+    tl.setResult(tl.TaskResult.Failed, tl.loc('CLINotFound'));
+} else if(!fs.existsSync(cfPath)) {
+    tl.setResult(tl.TaskResult.Failed, tl.loc('CLINotFoundInPath', cfPath));
+} else {
+    //The main task logic to push an app to Cloud Foundry
+    loginToCF()
     .then(function (code) {
-        tl.debug('Finished creating services if applicable, push app using cf CLI.');
-        pushAppToCF()
+        tl.debug('cf login succeeded, create services if applicable.');
+        createServices()
         .then(function (code) {
-            tl.debug('Successfully pushed app, now bind to existing services if applicable.');
-            bindServicesToApp()
-            .fail(function (err) {
-                onError('Failed to bind services to the application. ' + err);
+            tl.debug('Finished creating services if applicable, push app using cf CLI.');
+            pushAppToCF()
+            .then(function (code) {
+                tl.debug('Successfully pushed app, now bind to existing services if applicable.');
+                bindServicesToApp()
+                .fail(function (err) {
+                    tl.error(err);
+                    tl.setResult(tl.TaskResult.Failed, tl.loc('BindServicesFailed'));
+                })
             })
+            .fail(function (err) {
+                tl.error(err);
+                tl.setResult(tl.TaskResult.Failed, tl.loc('PushFailed'));
+            })        
         })
         .fail(function (err) {
-            onError('Failed to push app to Cloud Foundry. ' + err);
-        })        
+            tl.error(err);
+            tl.setResult(tl.TaskResult.Failed, tl.loc('CreateServiceFailed'));
+        })
     })
-    .fail(function (err) {
-        onError('Failed to create services in Cloud Foundry. ' + err);
+    .fail(function(err) {
+        tl.error(err);
+        tl.setResult(tl.TaskResult.Failed, tl.loc('EndPointCredentials'));
     })
-})
-.fail(function(err) {
-    onError('Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials. ' + err);
-})
-
+}

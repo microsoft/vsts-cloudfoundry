@@ -57,7 +57,7 @@ gulp.task('compileTasks', ['clean'], function (cb) {
     }
 
     var tasksPath = path.join(__dirname, 'Extension', '**/*.ts');
-    return gulp.src([tasksPath, 'definitions/*.d.ts'])
+    return gulp.src([tasksPath])
         .pipe(tsc())
         .pipe(gulp.dest(path.join(__dirname, 'Extension')));
 });

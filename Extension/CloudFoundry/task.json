@@ -12,8 +12,8 @@
     "author": "Microsoft",
     "demands": [],
     "version": {
-        "Major": 0,
-        "Minor": 115,
+        "Major": 1,
+        "Minor": 122,
         "Patch": 0
     },
     "groups": [
@@ -157,14 +157,24 @@
         "visibleRule": "deploymentOptions = manual"
       },
       {
+        "name": "useRoute",
+        "type": "boolean",
+        "label": "Use Route",
+        "defaultValue": "true",
+        "required": true,
+        "helpMarkDown": "Supply and map a route to this application.",
+        "groupName": "deployment",
+        "visibleRule": "deploymentOptions = manual"
+      },
+      {
         "name": "domain",
         "type": "string",
         "label": "Domain",
         "defaultValue": "",
-        "required": false,
+        "required": true,
         "helpMarkDown": "Domain where the application is pushed.",
         "groupName": "deployment",
-        "visibleRule": "deploymentOptions = manual"
+        "visibleRule": "deploymentOptions = manual && useRoute = true"
       },
       {
         "name": "host",
@@ -174,7 +184,32 @@
         "required": false,
         "helpMarkDown": "Subdomain where the application is pushed.",
         "groupName": "deployment",
+        "visibleRule": "deploymentOptions = manual && useRoute = true"
+      },
+      {
+        "name": "buildPackOptions",
+        "type": "picklist",
+        "label": "Buildpack Options",
+        "defaultValue": "none",
+        "required": "true",
+        "groupName": "deployment",
+        "helpMarkDown": "Specify a buildpack using a service endpoint or by a custom name. Please see (http://cli.cloudfoundry.org/en-US/cf/push.html) for more information regarding buildpacks.",
+        "options": {
+          "custom": "Custom",
+          "builtin": "Use built-in buildpacks only",
+          "none": "None"
+        },
         "visibleRule": "deploymentOptions = manual"
+      },
+      {
+        "name": "buildPackCustom",
+        "type": "string",
+        "label": "Buildpack",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Custom buildpack by name (e.g. my-buildpack) or Git URL (e.g. https://github.com/cloudfoundry/java-buildpack.git).",
+        "groupName": "deployment",
+        "visibleRule": "deploymentOptions = manual && buildPackOptions = custom"
       },
       {
         "name": "additionalDeployArgs",
@@ -183,6 +218,15 @@
         "defaultValue": "",
         "required": false,
         "helpMarkDown": "Additional arguments to pass to `cf push`. Reference: http://docs.cloudfoundry.org/cf-cli/getting-started.html#push",
+        "groupName": "deployment"
+      },
+      {
+        "name": "startOnDeploy",
+        "type": "boolean",
+        "label": "Start On Deploy",
+        "defaultValue": "true",
+        "required": false,
+        "helpMarkDown": "Starts the application after it is deployed.",
         "groupName": "deployment"
       },
       {
@@ -257,5 +301,13 @@
             "target": "cloudfoundry.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+      "CLINotFound": "cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.",
+      "CLINotFoundInPath": "cf CLI not found at: %s",
+      "EndPointCredentials": "Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials.",
+      "BindServicesFailed": "Failed to bind services to app.",
+      "PushFailed": "Failed to push app to Cloud Foundry.",
+      "CreateServiceFailed": "Failed to create services in Cloud Foundry."
     }
 }

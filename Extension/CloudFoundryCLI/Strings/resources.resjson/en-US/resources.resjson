@@ -24,5 +24,8 @@
   "loc.input.label.workingDirectory": "Working Directory",
   "loc.input.help.workingDirectory": "The working directory to run the Cloud Foundry CLI commands.",
   "loc.input.label.cfToolLocation": "Cloud Foundry CLI Location",
-  "loc.input.help.cfToolLocation": "Optionally specify the location to the cf CLI. If location is not specified, cf CLI needs to be in the PATH."
+  "loc.input.help.cfToolLocation": "Optionally specify the location to the cf CLI. If location is not specified, cf CLI needs to be in the PATH.",
+  "loc.messages.CLINotFound": "cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.",
+  "loc.messages.CLINotFoundInPath": "cf CLI not found at: %s",
+  "loc.messages.EndPointCredentials": "Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials."
 }

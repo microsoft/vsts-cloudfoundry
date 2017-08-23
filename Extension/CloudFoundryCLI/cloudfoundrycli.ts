@@ -1,53 +1,26 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 import Q = require('q');
 
-var onError = function(errMsg) {
-    tl.error(errMsg);
-    tl.exit(1);
-}
-
 var cfEndpoint = tl.getInput('cfEndpoint', true);
-if (!cfEndpoint) {
-    onError('The Cloud Foundry Endpoint could not be found');
-}
-
 var cfEndpointUrl = tl.getEndpointUrl(cfEndpoint, false);
-if (!cfEndpointUrl) {
-    onError('The Cloud Foundry Endpoint URL could not be found');
-}
-
 var cfEndpointAuth = tl.getEndpointAuthorization(cfEndpoint, false);
 var workingDir = tl.getInput('workingDirectory', true);
-
 var cfPath = tl.which('cf');
 var cfToolLocation = tl.getInput('cfToolLocation');
 if(cfToolLocation != tl.getVariable('System.DefaultWorkingDirectory')) {
     //custom tool location for cf CLI was specified
     cfPath = cfToolLocation;
-} else {
-    //tool location for cf CLI was not specified, show error if cf CLI is not in the PATH
-    if (!cfPath) {
-        onError('cf CLI is not found in the path. Install the cf CLI: https://github.com/cloudfoundry/cli.') 
-    }
-}
-
-if(!fs.existsSync(cfPath)) {
-    onError('cf CLI not found at: ' + cfPath);
 }
 
 //login using cf CLI login
 function loginToCF() {
      return Q.fcall(() => {
-        var cfLogin = tl.createToolRunner(cfPath);
+        var cfLogin = tl.tool(cfPath);
         cfLogin.arg('login');
         cfLogin.arg('-a');
         cfLogin.arg(cfEndpointUrl);
@@ -55,7 +28,7 @@ function loginToCF() {
         cfLogin.arg(cfEndpointAuth['parameters']['username']);
         cfLogin.arg('-p');
         cfLogin.arg(cfEndpointAuth['parameters']['password']);
-       if (tl.getBoolInput('oneTimePassword')) {
+        if (tl.getBoolInput('oneTimePassword')) {
             cfLogin.arg('--sso-passcode');
             cfLogin.arg(tl.getInput('ssoPasscode'));
         }
@@ -76,19 +49,28 @@ function loginToCF() {
      });
 }
 
-//The main task login to run cf CLI commands
-loginToCF()
-.then(function (code) {
-   var cfCmd = tl.createToolRunner(cfPath);
-   cfCmd.arg(tl.getInput('cfCommand', true));
-   var args = tl.getInput('cfArguments');
-   if(args) {
-       cfCmd.argString(args);
-   }
-   cfCmd.exec()
-   .fail(onError);
-})
-.fail(function(err) {
-    onError('Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials. ' + err);
-})
 
+if(!cfPath) {
+    tl.setResult(tl.TaskResult.Failed, tl.loc('CLINotFound'));
+} else if(!fs.existsSync(cfPath)) {
+    tl.setResult(tl.TaskResult.Failed, tl.loc('CLINotFoundInPath', cfPath));
+} else {
+    //The main task login to run cf CLI commands
+    loginToCF()
+    .then(function (code) {
+        var cfCmd = tl.tool(cfPath);
+        cfCmd.arg(tl.getInput('cfCommand', true));
+        var args = tl.getInput('cfArguments');
+        if(args) {
+            cfCmd.line(args);
+        }
+        cfCmd.exec()
+        .fail(function(err) {
+            tl.setResult(tl.TaskResult.Failed, '' + err);
+        });
+    })
+    .fail(function(err) {
+        tl.error(err);
+        tl.setResult(tl.TaskResult.Failed, tl.loc('EndPointCredentials'));
+    })
+}
