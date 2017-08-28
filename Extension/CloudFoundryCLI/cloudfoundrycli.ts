@@ -6,15 +6,16 @@ import path = require('path');
 import fs = require('fs');
 import Q = require('q');
 
+tl.setResourcePath(path.join(__dirname, 'task.json'));
+
 var cfEndpoint = tl.getInput('cfEndpoint', true);
 var cfEndpointUrl = tl.getEndpointUrl(cfEndpoint, false);
 var cfEndpointAuth = tl.getEndpointAuthorization(cfEndpoint, false);
 var workingDir = tl.getInput('workingDirectory', true);
 var cfPath = tl.which('cf');
-var cfToolLocation = tl.getInput('cfToolLocation');
-if(cfToolLocation != tl.getVariable('System.DefaultWorkingDirectory')) {
-    //custom tool location for cf CLI was specified
-    cfPath = cfToolLocation;
+if(tl.filePathSupplied('cfToolLocation')) {
+    tl.debug('Using supplied tool location');
+    cfPath = tl.getPathInput('cfToolLocation');
 }
 
 //login using cf CLI login
