@@ -6,20 +6,21 @@ import path = require('path');
 import fs = require('fs');
 import Q = require('q');
 
+tl.setResourcePath(path.join(__dirname, 'task.json'));
+
 var cfEndpoint = tl.getInput('cfEndpoint', true);
 var cfEndpointUrl = tl.getEndpointUrl(cfEndpoint, false);
 var cfEndpointAuth = tl.getEndpointAuthorization(cfEndpoint, false);
 var workingDir = tl.getInput('workingDirectory', true);
 var cfPath = tl.which('cf');
-var cfToolLocation = tl.getInput('cfToolLocation');
-if(cfToolLocation != tl.getVariable('System.DefaultWorkingDirectory')) {
-    //custom tool location for cf CLI was specified
-    cfPath = cfToolLocation;
+if (tl.filePathSupplied('cfToolLocation')) {
+    tl.debug('Using supplied tool location');
+    cfPath = tl.getPathInput('cfToolLocation');
 }
 
 //login using cf CLI login
 function loginToCF() {
-     return Q.fcall(() => {
+    return Q.fcall(() => {
         var cfLogin = tl.tool(cfPath);
         cfLogin.arg('login');
         cfLogin.arg('-a');
@@ -32,45 +33,45 @@ function loginToCF() {
             cfLogin.arg('--sso-passcode');
             cfLogin.arg(tl.getInput('ssoPasscode'));
         }
-        if(tl.getBoolInput('skipSSLValidation')) {
+        if (tl.getBoolInput('skipSSLValidation')) {
             cfLogin.arg('--skip-ssl-validation');
         }
-        if(tl.getInput('org')) {
+        if (tl.getInput('org')) {
             cfLogin.arg('-o');
             cfLogin.arg(tl.getInput('org'));
         }
-        if(tl.getInput('space')) {
+        if (tl.getInput('space')) {
             cfLogin.arg('-s');
             cfLogin.arg(tl.getInput('space'));
         }
 
         tl.debug('Login to connect to cf instance');
         return cfLogin.exec();
-     });
+    });
 }
 
 
-if(!cfPath) {
+if (!cfPath) {
     tl.setResult(tl.TaskResult.Failed, tl.loc('CLINotFound'));
-} else if(!fs.existsSync(cfPath)) {
+} else if (!fs.existsSync(cfPath)) {
     tl.setResult(tl.TaskResult.Failed, tl.loc('CLINotFoundInPath', cfPath));
 } else {
     //The main task login to run cf CLI commands
     loginToCF()
-    .then(function (code) {
-        var cfCmd = tl.tool(cfPath);
-        cfCmd.arg(tl.getInput('cfCommand', true));
-        var args = tl.getInput('cfArguments');
-        if(args) {
-            cfCmd.line(args);
-        }
-        cfCmd.exec()
-        .fail(function(err) {
-            tl.setResult(tl.TaskResult.Failed, '' + err);
-        });
-    })
-    .fail(function(err) {
-        tl.error(err);
-        tl.setResult(tl.TaskResult.Failed, tl.loc('EndPointCredentials'));
-    })
+        .then(function (code) {
+            var cfCmd = tl.tool(cfPath);
+            cfCmd.arg(tl.getInput('cfCommand', true));
+            var args = tl.getInput('cfArguments');
+            if (args) {
+                cfCmd.line(args);
+            }
+            cfCmd.exec()
+                .fail(function (err) {
+                    tl.setResult(tl.TaskResult.Failed, '' + err);
+                });
+        })
+        .fail(function (err) {
+            tl.error(err);
+            tl.setResult(tl.TaskResult.Failed, tl.loc('EndPointCredentials'));
+        })
 }
