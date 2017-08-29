@@ -1,6 +1,6 @@
 {
   "name": "vsts.cloudfoundry",
-  "version": "0.122.0",
+  "version": "1.123.0",
   "description": "Visual Studio Team Services extension for Cloud Foundry",
   "main": "gulpfile.js",
   "directories": {
