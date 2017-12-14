@@ -58,6 +58,25 @@
         "groupName": "connection"
       },
       {
+        "name": "apiKey",
+        "type": "boolean",
+        "label": "Use API key",
+        "defaultValue": "false",
+        "required": "false",
+        "helpMarkDown": "Use a API key login to the Cloud Foundry instance.",
+        "groupName": "connection"
+      },
+      {
+        "name": "apiKeyInput",
+        "type": "string",
+        "label": "API key",
+        "defaultValue": "",
+        "required": "true",
+        "helpMarkDown": "Specify the API key to login to the Cloud Foundry instance.",
+        "groupName": "connection",
+        "visibleRule": "apiKey = true"
+      },
+      {
         "name": "oneTimePassword",
         "type": "boolean",
         "label": "Use One-time Password",
