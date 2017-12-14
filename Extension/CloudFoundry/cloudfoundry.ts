@@ -26,13 +26,19 @@ function loginToCF() {
         cfLogin.arg('login');
         cfLogin.arg('-a');
         cfLogin.arg(cfEndpointUrl);
-        cfLogin.arg('-u');
-        cfLogin.arg(cfEndpointAuth['parameters']['username']);
-        cfLogin.arg('-p');
-        cfLogin.arg(cfEndpointAuth['parameters']['password']);
-        if (tl.getBoolInput('oneTimePassword')) {
-            cfLogin.arg('--sso-passcode');
-            cfLogin.arg(tl.getInput('ssoPasscode'));
+        if (!tl.getBoolInput('apiKey') && !tl.getBoolInput('oneTimePassword')) {
+            cfLogin.arg('-u');
+            cfLogin.arg(cfEndpointAuth['parameters']['username']);
+            cfLogin.arg('-p');
+            cfLogin.arg(cfEndpointAuth['parameters']['password']);
+        } else {
+            if (tl.getBoolInput('apiKey')) {
+                cfLogin.arg('--apikey');
+                cfLogin.arg(tl.getInput('apiKeyInput'));
+            } else if (tl.getBoolInput('oneTimePassword')) {
+                cfLogin.arg('--sso-passcode');
+                cfLogin.arg(tl.getInput('ssoPasscode'));
+            }
         }
         if (tl.getBoolInput('skipSSLValidation')) {
             cfLogin.arg('--skip-ssl-validation');
