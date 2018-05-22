@@ -144,7 +144,7 @@ function pushAppToCF() {
                 cfPush.arg('--no-route');
             }
 
-            if (tl.getBoolInput('startOnDeploy', false)) {
+            if (!tl.getBoolInput('startOnDeploy', false)) {
                 cfPush.arg('--no-start');
             }
         }
