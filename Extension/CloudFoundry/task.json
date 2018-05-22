@@ -12,8 +12,8 @@
     "author": "Microsoft",
     "demands": [],
     "version": {
-        "Major": 1,
-        "Minor": 123,
+        "Major": 2,
+        "Minor": 136,
         "Patch": 0
     },
     "groups": [
