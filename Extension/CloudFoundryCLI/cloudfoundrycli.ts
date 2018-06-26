@@ -65,10 +65,16 @@ if (!cfPath) {
             if (args) {
                 cfCmd.line(args);
             }
-            cfCmd.exec()
-                .fail(function (err) {
-                    tl.setResult(tl.TaskResult.Failed, '' + err);
-                });
+            
+            var cfResult = cfCmd.execSync();
+            
+            if(cfResult.error != null){
+                tl.setResult(tl.TaskResult.Failed, '' + cfResult.error);
+            }
+            else{
+                tl.setVariable("CfCliOutput", cfResult.stdout, false);
+                tl.setResult(tl.TaskResult.Succeeded, "")
+            }
         })
         .fail(function (err) {
             tl.error(err);

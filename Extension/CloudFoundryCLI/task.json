@@ -13,7 +13,7 @@
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 136,
+        "Minor": 137,
         "Patch": 0
     },
     "groups": [
@@ -117,6 +117,12 @@
         "required": false,
         "helpMarkDown": "Optionally specify the location to the cf CLI. If location is not specified, cf CLI needs to be in the PATH.",
         "groupName": "advanced"
+      }
+    ],
+    "OutputVariables":[
+      {
+        "name": "CfCliOutput",
+        "description": "Output of Cloud Foundry CLI Command"
       }
     ],
     "execution": {

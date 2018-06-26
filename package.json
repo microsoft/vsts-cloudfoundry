@@ -35,15 +35,14 @@
     "mocha": "^2.3.3",
     "semver": "^4.3.3",
     "shelljs": "^0.3.0",
-    "tfx-cli": "^0.3.0",
     "through2": "^0.6.3",
     "typescript": "^2.4.1",
-    "validator": "^3.33.0",
-    "vsts-task-lib": "^2.0.5"
+    "validator": "^3.33.0"
   },
   "dependencies": {
     "process": "^0.10.1",
     "q": "^1.2.0",
-    "tfx-cli": "^0.3.12"
+    "tfx-cli": "^0.3.12",
+    "vsts-task-lib": "^2.0.5"
   }
 }
