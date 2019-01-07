@@ -11,7 +11,7 @@ var fs = require('fs');
 var semver = require('semver');
 var Q = require('q');
 var exec = require('child_process').exec;
-var tsc = require('gulp-tsc');
+var tsc = require('gulp-typescript');
 var mocha = require('gulp-mocha');
 var cp = require('child_process');
 
@@ -41,14 +41,14 @@ var _pkgRoot = path.join(__dirname, '_package');
 
 var _tempPath = path.join(__dirname, '_temp');
 
-gulp.task('clean', function (cb) {
-    del([_buildRoot, _pkgRoot, _tempPath], cb);
-});
+gulp.task('clean', gulp.series(function (cb) {
+    return del([_buildRoot, _pkgRoot, _tempPath], cb);
+}));
 
 // compile tasks inline
-gulp.task('compileTasks', ['clean'], function (cb) {
+gulp.task('compileTasks', gulp.series('clean', function (cb) {
     try {
-        getNpmExternal('vsts-task-lib');
+        getNpmExternal('azure-pipelines-task-lib');
     }
     catch (err) {
         console.log('error:' + err.message);
@@ -60,28 +60,28 @@ gulp.task('compileTasks', ['clean'], function (cb) {
     return gulp.src([tasksPath])
         .pipe(tsc())
         .pipe(gulp.dest(path.join(__dirname, 'Extension')));
-});
+}));
 
-gulp.task('copyMdFiles', function(cb) {
+gulp.task('copyMdFiles', gulp.series(function(cb) {
     return gulp.src(path.join(__dirName, '*.md'))
     .pipe(gulp.dest(path.join(__dirname)));
-})
+}))
 
-gulp.task('compile', ['compileTasks', 'copyMdFiles']);
+gulp.task('compile', gulp.series('compileTasks', 'copyMdFiles'));
 
-gulp.task('locCommon', ['compileTasks'], function () {
+gulp.task('locCommon', gulp.series('compileTasks', function () {
     return gulp.src(path.join(__dirname, 'Tasks/Common/**/module.json'))
         .pipe(pkgm.LocCommon());
-});
+}));
 
-gulp.task('build', ['locCommon'], function () {
+gulp.task('build', gulp.series('locCommon', function () {
     // Layout the tasks.
     shell.mkdir('-p', _buildRoot);
     return gulp.src(path.join(__dirname, 'Extension', '**/task.json'))
         .pipe(pkgm.PackageTask(_buildRoot, [], []));
-});
+}));
 
-gulp.task('package', ['build'], function() {
+gulp.task('package', gulp.series('build', function() {
     var _manifestDir = path.join(__dirname, 'Extension');
     shell.cp('-R', path.join(_manifestDir, 'extension-icon.png'), _buildRoot);
     shell.cp('-R', path.join(_manifestDir, 'extension-manifest.json'), _buildRoot);
@@ -89,9 +89,9 @@ gulp.task('package', ['build'], function() {
     shell.cp('-R', path.join(_manifestDir, 'images'), _buildRoot);
        
     return pkgm.PackageVsix(_pkgRoot, _buildRoot);
-});
+}));
 
-gulp.task('default', ['package']);
+gulp.task('default', gulp.series('package'));
 
 //-----------------------------------------------------------------------------------------------------------------
 // INTERNAL BELOW

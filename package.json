@@ -25,25 +25,24 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-cloudfoundry",
   "devDependencies": {
-    "del": "^1.1.1",
-    "gulp": "^3.9.1",
-    "gulp-mocha": "^2.1.3",
-    "gulp-tsc": "^1.1.0",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-mocha": "^6.0.0",
+    "gulp-typescript": "^5.0.0",
     "gulp-util": "^3.0.4",
     "gulp-zip": "^3.0.2",
     "minimist": "^1.1.1",
-    "mocha": "^2.3.3",
+    "mocha": "^5.2.0",
     "semver": "^4.3.3",
     "shelljs": "^0.3.0",
-    "tfx-cli": "^0.3.0",
+    "tfx-cli": "^0.6.4",
     "through2": "^0.6.3",
     "typescript": "^2.4.1",
     "validator": "^3.33.0",
-    "vsts-task-lib": "^2.0.5"
+    "azure-pipelines-task-lib": "^2.7.7"
   },
   "dependencies": {
-    "process": "^0.10.1",
-    "q": "^1.2.0",
-    "tfx-cli": "^0.3.12"
+    "@types/node": "^6.0.101",
+    "q": "^1.2.0"
   }
 }
