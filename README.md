@@ -1,5 +1,5 @@
 # vsts-cloudfoundry
-Cloud Foundry build extension for Visual Studio Team Services allows you to automated the deployment process to any Cloud Foundry instance. This extension provides a build task to enable you to push applications to any Cloud Foundry instance. It also includes a Utility task to run any Cloud Foundry CLI commands as part of your build process.
+Cloud Foundry build extension for Azure DevOps allows you to automate the deployment process to any Cloud Foundry instance. This extension provides a build task to enable you to push applications to any Cloud Foundry instance. It also includes a Utility task to run any Cloud Foundry CLI commands as part of your build process.
 
 ## Create a Cloud Foundry Connection
 Create a Generic Service Endpoint and specify your Cloud Foundry API endpoint URL, email/username and password.
@@ -37,4 +37,4 @@ We love and encourage community contributions. To contribute:
 1. npm install
 1. gulp
 
-The vsix package will be produced in `_package`, and it can be uploaded to Visual Studio Team Services Marketplace for sharing. 
+The vsix package will be produced in `_package`, and it can be uploaded to Azure DevOps Marketplace for sharing. 
