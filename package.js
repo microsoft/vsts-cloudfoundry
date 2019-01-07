@@ -278,7 +278,7 @@ function packageTask(pkgPath, commonDeps, commonSrc){
                 var libDeps = [ ];
                 if (task.execution['Node']) {
                     libDeps.push({
-                        "name": "vsts-task-lib",
+                        "name": "azure-pipelines-task-lib",
                         "src": "node_modules",
                         "dest": "node_modules"
                     });

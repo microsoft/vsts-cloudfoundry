@@ -48,7 +48,7 @@ gulp.task('clean', gulp.series(function (cb) {
 // compile tasks inline
 gulp.task('compileTasks', gulp.series('clean', function (cb) {
     try {
-        getNpmExternal('vsts-task-lib');
+        getNpmExternal('azure-pipelines-task-lib');
     }
     catch (err) {
         console.log('error:' + err.message);
