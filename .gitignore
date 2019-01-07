@@ -2,3 +2,4 @@ node_modules/
 _temp/
 _build/
 _package/
+[Ee]xtension/**/*.js
