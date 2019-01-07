@@ -128,12 +128,9 @@ function pushAppToCF() {
             }
 
             if (tl.getBoolInput('useRoute')) {
-                let domainOption: string = tl.getInput('domainOptions');
-                if (domainOption === 'custom') {
-                    if (tl.getInput('domain')) {
-                        cfPush.arg('-d');
-                        cfPush.arg(tl.getInput('domain'));
-                    }
+                if (tl.getInput('domain')) {
+                    cfPush.arg('-d');
+                    cfPush.arg(tl.getInput('domain'));
                 }
 
                 if (tl.getInput('host')) {

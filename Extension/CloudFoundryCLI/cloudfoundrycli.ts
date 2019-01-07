@@ -59,6 +59,7 @@ if (!cfPath) {
     //The main task login to run cf CLI commands
     loginToCF()
         .then(function (code) {
+            tl.cd(workingDir);
             var cfCmd = tl.tool(cfPath);
             cfCmd.arg(tl.getInput('cfCommand', true));
             var args = tl.getInput('cfArguments');
