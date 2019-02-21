@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Cloud Foundry CLI Install",
+  "loc.helpMarkDown": "",
+  "loc.description": "Install Cloud Foundry command line interface.",
+  "loc.instanceNameFormat": "Install Cloud Foundry CLI $(cfVersion)",
+  "loc.input.label.cfVersion": "Cloud Foundry Version",
+  "loc.input.help.cfVersion": "Specify the version of Cloud Foundry CLI to install",
+  "loc.messages.DownloadCFFailedFromLocation": "Failed to download Cloud Foundry from location %s. Error %s",
+  "loc.messages.CFNotFoundInFolder": "Cloud Foundry executable not found in path %s",
+  "loc.messages.CFDownloadFailed": "Failed to download Cloud Foundry from location %s. Error %s",
+  "loc.messages.VerifyCFInstallation": "Verifying Cloud Foundry installation..."
+}

@@ -37,7 +37,7 @@
         "defaultValue": "",
         "required": true,
         "helpMarkDown": "Service endpoint for your Cloud Foundry instance."
-      },     
+      },
       {
         "name": "skipSSLValidation",
         "type": "boolean",

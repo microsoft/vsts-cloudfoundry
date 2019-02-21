@@ -17,4 +17,4 @@ Add the Cloud Foundry Build tasks to your build steps and specify the input argu
 More documentation is available [here](https://github.com/Microsoft/vsts-cloudfoundry).
 
 ## License
-The [code](https://github.com/Microsoft/vsts-cloudfoundry) is open sourced under the MIT license. We love and encourage community contributions.  
+The [code](https://github.com/Microsoft/vsts-cloudfoundry) is open sourced under the MIT license. We love and encourage community contributions.

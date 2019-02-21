@@ -42,6 +42,7 @@ var _pkgRoot = path.join(__dirname, '_package');
 var _tempPath = path.join(__dirname, '_temp');
 
 gulp.task('clean', gulp.series(function (cb) {
+    cb.force = true;
     return del([_buildRoot, _pkgRoot, _tempPath], cb);
 }));
 
@@ -58,7 +59,7 @@ gulp.task('compileTasks', gulp.series('clean', function (cb) {
 
     var tasksPath = path.join(__dirname, 'Extension', '**/*.ts');
     return gulp.src([tasksPath])
-        .pipe(tsc())
+        .pipe(tsc( path.join(__dirname,"tsconfig.json")))
         .pipe(gulp.dest(path.join(__dirname, 'Extension')));
 }));
 

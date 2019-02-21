@@ -7,7 +7,7 @@
     "description": "Cloud Foundry build extension to push applications to a Cloud Foundry instance.",
     "public": true,
     "categories": [
-        "Build and release"
+        "Azure Pipelines"
     ],
     "tags": [
         "deploy",
@@ -40,6 +40,9 @@
             "path": "CloudFoundryCLI"
         },
         {
+            "path":"CloudFoundryCLIInstall"
+        },
+        {
             "path": "images",
             "addressable": true
         }
@@ -63,6 +66,16 @@
             ],
             "properties": {
                 "name": "CloudFoundryCLI"
+            }
+        },
+        {
+            "id": "cloud-foundry-cli-install-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "CloudFoundryCLIInstall"
             }
         }
     ]
