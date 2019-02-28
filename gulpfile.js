@@ -50,6 +50,7 @@ gulp.task('clean', gulp.series(function (cb) {
 gulp.task('compileTasks', gulp.series('clean', function (cb) {
     try {
         getNpmExternal('azure-pipelines-task-lib');
+        getNpmExternal('azure-pipelines-tool-lib');
     }
     catch (err) {
         console.log('error:' + err.message);
@@ -59,7 +60,7 @@ gulp.task('compileTasks', gulp.series('clean', function (cb) {
 
     var tasksPath = path.join(__dirname, 'Extension', '**/*.ts');
     return gulp.src([tasksPath])
-        .pipe(tsc( path.join(__dirname,"tsconfig.json")))
+        .pipe(tsc(path.join(__dirname,'tsconfig.json')))
         .pipe(gulp.dest(path.join(__dirname, 'Extension')));
 }));
 

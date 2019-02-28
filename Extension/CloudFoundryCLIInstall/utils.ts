@@ -3,11 +3,11 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import fs = require('fs');
-import * as toolLib from 'azure-pipelines-tool-lib/tool';
-import * as os from "os";
-import * as util from "util";
+import toolLib = require('azure-pipelines-tool-lib/tool');
+import os = require('os');
+import util = require('util');
 
-const uuidV4 = require('uuid/v4');
+import uuidV4 = require('uuid/v4');
 const toolName = "cf";
 const isWindows = os.type().match(/^Win/);
 const toolNameWithExtension = toolName + getExecutableExtension();
@@ -32,9 +32,9 @@ export async function downloadCF(version: string): Promise<string> {
             unzipedCFPath = await toolLib.extractTar(cfDownloadPath);
         }
 
-        //contents of the extracted archive are under "cf_cli" directory. caching only "cf(.exe)" CLI
-        unzipedCFPath = path.join(unzipedCFPath, "cf_cli",  toolNameWithExtension);
-        cachedToolpath = await toolLib.cacheFile(unzipedCFPath,  toolNameWithExtension, toolName, cleanVersion);
+        // caching only "cf(.exe)" CLI
+        unzipedCFPath = path.join(unzipedCFPath, toolNameWithExtension);
+        cachedToolpath = await toolLib.cacheFile(unzipedCFPath, toolNameWithExtension, toolName, cleanVersion);
     }
 
     var cfPath = findCFCli(cachedToolpath);
