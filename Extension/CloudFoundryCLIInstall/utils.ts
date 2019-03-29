@@ -61,7 +61,7 @@ function getDownloadURL(version: string): string {
             platform = "linux64-binary"; break;
 
         case 'Darwin':
-            platform = "macosx64"; break;
+            platform = "macosx64-binary"; break;
 
         default:
         case 'Windows_NT':
