@@ -2,6 +2,8 @@
 
 [![Build Status](https://dev.azure.com/mseng/AzureDevOps/_apis/build/status/Microsoft.vsts-cloudfoundry?branchName=master)](https://dev.azure.com/mseng/AzureDevOps/_build/latest?definitionId=8377&branchName=master)
 
+[![Build status](https://dev.azure.com/mseng/AzureDevOps/_apis/build/status/Teams/CIX/GitHub.vsts-cloudfoundry.CI)](https://dev.azure.com/mseng/AzureDevOps/_build/latest?definitionId=3417)
+
 Cloud Foundry build extension for Azure DevOps allows you to automate the deployment process to any Cloud Foundry instance. This extension provides a build task to enable you to push applications to any Cloud Foundry instance. It also includes a Utility task to run any Cloud Foundry CLI commands as part of your build process.
 
 ## Create a Cloud Foundry Connection
