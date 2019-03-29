@@ -1,0 +1,45 @@
+{
+  "id": "1dd22dc2-95a2-4ca3-8eb4-3f65a1acd1b3",
+  "name": "CloudFoundryCLIInstall",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft",
+  "demands": [],
+  "satisfies": [
+    "cf"
+  ],
+  "minimumAgentVersion": "2.142.1",
+  "version": {
+    "Major": 0,
+    "Minor": 150,
+    "Patch": 0
+  },
+  "inputs": [
+    {
+      "name": "cfVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.cfVersion",
+      "defaultValue": "6.43.0",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.cfVersion"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "cfcliinstaller.js"
+    }
+  },
+  "messages": {
+    "DownloadCFFailedFromLocation": "ms-resource:loc.messages.DownloadCFFailedFromLocation",
+    "CFNotFoundInFolder": "ms-resource:loc.messages.CFNotFoundInFolder",
+    "CFDownloadFailed": "ms-resource:loc.messages.CFDownloadFailed",
+    "VerifyCFInstallation": "ms-resource:loc.messages.VerifyCFInstallation"
+  }
+}

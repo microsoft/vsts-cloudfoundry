@@ -1,0 +1,45 @@
+{
+    "id": "1dd22dc2-95a2-4ca3-8eb4-3f65a1acd1b3",
+    "name": "CloudFoundryCLIInstall",
+    "friendlyName": "Cloud Foundry CLI Install",
+    "description": "Install Cloud Foundry command line interface.",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "instanceNameFormat": "Install Cloud Foundry CLI $(cfVersion)",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft",
+    "demands": [],
+    "satisfies": [
+        "cf"
+    ],
+    "minimumAgentVersion": "2.142.1",
+    "version": {
+        "Major": 0,
+        "Minor": 150,
+        "Patch": 0
+    },
+    "inputs": [
+        {
+          "name": "cfVersion",
+          "type": "string",
+          "label": "Cloud Foundry Version",
+          "defaultValue": "6.43.0",
+          "required": true,
+          "helpMarkDown": "Specify the version of Cloud Foundry CLI to install"
+        }
+      ],
+      "execution": {
+        "Node": {
+            "target": "cfcliinstaller.js"
+        }
+    },
+    "messages": {
+      "DownloadCFFailedFromLocation": "Failed to download Cloud Foundry from location %s. Error %s",
+      "CFNotFoundInFolder": "Cloud Foundry executable not found in path %s",
+      "CFDownloadFailed": "Failed to download Cloud Foundry from location %s. Error %s",
+      "VerifyCFInstallation": "Verifying Cloud Foundry installation..."
+  }
+}
