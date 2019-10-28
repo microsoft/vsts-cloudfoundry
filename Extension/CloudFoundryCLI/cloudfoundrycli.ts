@@ -5,6 +5,8 @@ import tl = require('azure-pipelines-task-lib');
 import path = require('path');
 import fs = require('fs');
 import Q = require('q');
+import {IExecOptions}  from 'azure-pipelines-task-lib/toolrunner';
+
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -13,9 +15,22 @@ var cfEndpointUrl = tl.getEndpointUrl(cfEndpoint, false);
 var cfEndpointAuth = tl.getEndpointAuthorization(cfEndpoint, false);
 var workingDir = tl.getInput('workingDirectory', true);
 var cfPath = tl.which('cf');
+
+
 if (tl.filePathSupplied('cfToolLocation')) {
     tl.debug('Using supplied tool location');
     cfPath = tl.getPathInput('cfToolLocation');
+}
+
+function getOptions() {
+    const tempDir = tl.getVariable('Agent.TempDirectory');
+
+    var options = <IExecOptions>{};
+    options.env = process.env;
+    // overriding config dir so that different agents on the same host can run. https://docs.cloudfoundry.org/cf-cli/cf-help.html 
+    options.env['CF_HOME'] = path.join(tempDir, 'cfCLI');
+
+    return options;
 }
 
 //login using cf CLI login
@@ -46,7 +61,7 @@ function loginToCF() {
         }
 
         tl.debug('Login to connect to cf instance');
-        return cfLogin.exec();
+        return cfLogin.exec(getOptions());
     });
 }
 
@@ -66,7 +81,7 @@ if (!cfPath) {
             if (args) {
                 cfCmd.line(args);
             }
-            cfCmd.exec()
+            cfCmd.exec(getOptions())
                 .fail(function (err) {
                     tl.setResult(tl.TaskResult.Failed, '' + err);
                 });
