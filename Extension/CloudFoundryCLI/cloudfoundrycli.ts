@@ -23,13 +23,16 @@ if (tl.filePathSupplied('cfToolLocation')) {
 }
 
 function getOptions() {
-    const tempDir = tl.getVariable('Agent.TempDirectory');
-
+    const  CFHOMEKEY = 'CF_HOME';
     var options = <IExecOptions>{};
     options.env = process.env;
-    // overriding config dir so that different agents on the same host can run. https://docs.cloudfoundry.org/cf-cli/cf-help.html 
-    options.env['CF_HOME'] = path.join(tempDir, 'cfCLI');
 
+    if(!(CFHOMEKEY in options.env)){
+        const tempDir = tl.getVariable('Agent.TempDirectory');
+        // overriding config dir so that different agents on the same host can run. https://docs.cloudfoundry.org/cf-cli/cf-help.html 
+        options.env['CF_HOME'] = path.join(tempDir, 'cfCLI');
+    }
+    
     return options;
 }
 
