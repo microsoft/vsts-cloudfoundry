@@ -5,6 +5,7 @@ import tl = require('azure-pipelines-task-lib');
 import path = require('path');
 import fs = require('fs');
 import Q = require('q');
+import {IExecOptions}  from 'azure-pipelines-task-lib/toolrunner';
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -17,6 +18,20 @@ var cfPath = tl.which('cf');
 if (tl.filePathSupplied('cfToolLocation')) {
     tl.debug('Using supplied tool location');
     cfPath = tl.getPathInput('cfToolLocation');
+}
+
+function getOptions() {
+    const  CFHOMEKEY = 'CF_HOME';
+    var options = <IExecOptions>{};
+    options.env = process.env;
+
+    if(!(CFHOMEKEY in options.env)){
+        const tempDir = tl.getVariable('Agent.TempDirectory');
+        // overriding config dir so that different agents on the same host can run. https://docs.cloudfoundry.org/cf-cli/cf-help.html 
+        options.env['CF_HOME'] = path.join(tempDir, 'cfCLI');
+    }
+    
+    return options;
 }
 
 //login using cf CLI login
@@ -47,7 +62,7 @@ function loginToCF() {
         }
 
         tl.debug('Login to connect to cf instance');
-        return cfLogin.exec();
+        return cfLogin.exec(getOptions());
     });
 }
 
@@ -59,7 +74,7 @@ function createService(createServiceArgs: string) {
             var cfCups = tl.tool(cfPath);
             cfCups.arg('create-user-provided-service');
             cfCups.line(createServiceArgs);
-            return cfCups.exec();
+            return cfCups.exec(getOptions());
         } else {
             return Q(0);
         }
@@ -151,7 +166,7 @@ function pushAppToCF() {
             cfPush.line(tl.getInput('additionalDeployArgs'));
         }
 
-        return cfPush.exec();
+        return cfPush.exec(getOptions());
     });
 }
 
@@ -161,7 +176,7 @@ function restageApp(appName: string) {
         var cfRestage = tl.tool(cfPath);
         cfRestage.arg('restage');
         cfRestage.arg(appName);
-        return cfRestage.exec();
+        return cfRestage.exec(getOptions());
     })
 }
 
@@ -173,7 +188,7 @@ function bindServiceToApp(appName: string, service: string) {
             cfBindService.arg('bind-service');
             cfBindService.arg(appName);
             cfBindService.line(service);
-            return cfBindService.exec();
+            return cfBindService.exec(getOptions());
         } else {
             return Q(0);
         }
