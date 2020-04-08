@@ -100,6 +100,40 @@ function createServices() {
     })
 }
 
+//update a service using cf CLI create-user-provided-service
+function updateService(updateServiceArgs: string) {
+    return Q.fcall(() => {
+        if (updateServiceArgs && updateServiceArgs.trim() != '') {
+            //cf uups = update-user-provided-service
+            var cfUups = tl.tool(cfPath);
+            cfUups.arg("update-user-provided-service");
+            cfUups.line(updateServiceArgs);
+            return cfUups.exec(getOptions());
+        } else {
+            return Q(0);
+        }
+    })
+}
+
+//update multiple services based on user input
+function updateServices() {
+    return Q.fcall(() => {
+        var serviceDetails: string[] = tl.getDelimitedInput('updateServiceArgs', '\n', false);
+        if (tl.getBoolInput('updateServices') && serviceDetails && serviceDetails.length > 0) {
+            var result = Q({});
+            serviceDetails.forEach((fn) => {
+                result = result.then(() => {
+                    return updateService(fn);
+                })
+            })
+            return result;
+        } else {
+            tl.debug('User did not choose to update a service or provide any service details.');
+            return Q(0);
+        }
+    })
+}
+
 //push app using cf CLI push
 function pushAppToCF() {
     return Q.fcall(() => {
@@ -235,20 +269,27 @@ if (!cfPath) {
             tl.debug('cf login succeeded, create services if applicable.');
             createServices()
                 .then(function (code) {
-                    tl.debug('Finished creating services if applicable, push app using cf CLI.');
-                    pushAppToCF()
+                    tl.debug('Finished creating services if applicable, update services.');
+                    updateServices()
                         .then(function (code) {
-                            tl.debug('Successfully pushed app, now bind to existing services if applicable.');
-                            bindServicesToApp()
+                            tl.debug("Finished updatiang services if applicable, push app using cf CLI.");
+                            pushAppToCF()
+                                .then(function (code) {
+                                    tl.debug("Successfully pushed app, now bind to existing services if applicable.");
+                                    bindServicesToApp().fail(function (err) {
+                                        tl.error(err);
+                                        tl.setResult(tl.TaskResult.Failed, tl.loc("BindServicesFailed"));
+                                    });
+                                })
                                 .fail(function (err) {
                                     tl.error(err);
-                                    tl.setResult(tl.TaskResult.Failed, tl.loc('BindServicesFailed'));
-                                })
+                                    tl.setResult(tl.TaskResult.Failed, tl.loc("PushFailed"));
+                                });
                         })
                         .fail(function (err) {
                             tl.error(err);
-                            tl.setResult(tl.TaskResult.Failed, tl.loc('PushFailed'));
-                        })
+                            tl.setResult(tl.TaskResult.Failed, tl.loc("UpdateServiceFailed"));
+                        }); 
                 })
                 .fail(function (err) {
                     tl.error(err);

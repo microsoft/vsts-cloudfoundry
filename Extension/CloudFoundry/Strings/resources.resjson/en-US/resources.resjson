@@ -48,6 +48,10 @@
   "loc.input.help.createServices": "Choose to create new services before pushing your application.",
   "loc.input.label.createServiceArgs": "Create Service Arguments",
   "loc.input.help.createServiceArgs": "Specify name of user provided service to create with optional properties. Specify each service on a new line e.g. \n\n `my-db-service1` \n\n `my-route-service -r https://example.com`",
+  "loc.input.label.updateServices": "Update Services",
+  "loc.input.help.updateServices": "Choose to update services before pushing your application.",
+  "loc.input.label.updateServiceArgs": "Update Service Arguments",
+  "loc.input.help.updateServiceArgs": "Specify name of user provided service to update with optional properties. Specify each service on a new line e.g. \n\n `my-db-service1` \n\n `my-route-service -p credential.json`",
   "loc.input.label.bindServices": "Bind Services",
   "loc.input.help.bindServices": "Choose to bind existing services to your application.",
   "loc.input.label.appName": "Application Name",
@@ -63,5 +67,7 @@
   "loc.messages.EndPointCredentials": "Failed to login to the Cloud Foundry endpoint. Verify the URL and credentials.",
   "loc.messages.BindServicesFailed": "Failed to bind services to app.",
   "loc.messages.PushFailed": "Failed to push app to Cloud Foundry.",
-  "loc.messages.CreateServiceFailed": "Failed to create services in Cloud Foundry."
+  "loc.messages.CreateServiceFailed": "Failed to create services in Cloud Foundry.",
+  "loc.messages.UpdateServiceFailed": "Failed to update services in Cloud Foundry."
+
 }
