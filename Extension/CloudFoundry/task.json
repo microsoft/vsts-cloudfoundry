@@ -249,6 +249,25 @@
         "visibleRule": "createServices = true"
       },
       {
+        "name": "updateServices",
+        "type": "boolean",
+        "label": "Update Services",
+        "defaultValue": "false",
+        "required": true,
+        "helpMarkDown": "Choose to update services before pushing your application.",
+        "groupName": "services"
+      },
+      {
+        "name": "updateServiceArgs",
+        "type": "multiLine",
+        "label": "Update Service Arguments",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Specify name of user provided service to update with optional properties. Specify each service on a new line e.g. \n\n `my-db-service1` \n\n `my-route-service -p credential.json",
+        "groupName": "services",
+        "visibleRule": "createServices = true"
+      },
+      {
         "name": "bindServices",
         "type": "boolean",
         "label": "Bind Services",
