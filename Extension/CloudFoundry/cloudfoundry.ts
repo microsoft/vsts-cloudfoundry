@@ -278,26 +278,17 @@ if (!cfPath) {
                                     tl.debug("Successfully pushed app, now bind to existing services if applicable.");
                                     bindServicesToApp().fail(function (err) {
                                         tl.error(err);
-                                        tl.setResult(
-                                            tl.TaskResult.Failed,
-                                            tl.loc("BindServicesFailed")
-                                        );
+                                        tl.setResult(tl.TaskResult.Failed, tl.loc("BindServicesFailed"));
                                     });
                                 })
                                 .fail(function (err) {
                                     tl.error(err);
-                                    tl.setResult(
-                                        tl.TaskResult.Failed,
-                                        tl.loc("PushFailed")
-                                    );
+                                    tl.setResult(tl.TaskResult.Failed, tl.loc("PushFailed"));
                                 });
                         })
                         .fail(function (err) {
                             tl.error(err);
-                            tl.setResult(
-                                tl.TaskResult.Failed,
-                                tl.loc("UpdateServiceFailed")
-                            );
+                            tl.setResult(tl.TaskResult.Failed, tl.loc("UpdateServiceFailed"));
                         }); 
                 })
                 .fail(function (err) {
